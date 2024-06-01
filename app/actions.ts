@@ -158,8 +158,8 @@ export async function BuyProduct(formData: FormData){
                 destination: data?.User?.connectedAccountId as string,
             },
         },
-        success_url: 'http://localhost:3000/payment/success',
-        cancel_url: 'http://localhost:3000/payment/cancel',
+        success_url: process.env.NODE_ENV === "development" ? 'http://localhost:3000/payment/success' : "https://saadui.vercel.app/payment/success",
+        cancel_url: process.env.NODE_ENV === "development" ? 'http://localhost:3000/payment/cancel' : "https://saadui.vercel.app/payment/cancel",
     });
 
     return redirect(session.url as string);
@@ -186,8 +186,8 @@ export async function CreateStripeAccountLink(){
 
     const accountLink = await stripe.accountLinks.create({
         account: data?.connectedAccountId as string,
-        refresh_url: `http://localhost:3000/billing`,
-        return_url: `http://localhost:3000/return/${data?.connectedAccountId}`,
+        refresh_url: process.env.NODE_ENV === "development" ? `http://localhost:3000/billing` : `https://saadui.vercel.app/billing`,
+        return_url: process.env.NODE_ENV === "development" ? `http://localhost:3000/return/${data?.connectedAccountId}` : `https://saadui.vercel.app/return/${data?.connectedAccountId}`,
         type: 'account_onboarding',
     });
 
