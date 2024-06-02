@@ -5,6 +5,7 @@ import prisma from './lib/db';
 import { type CategoryTypes } from '@prisma/client';
 import { stripe } from './lib/stripe';
 import { redirect } from 'next/navigation';
+import { link } from 'fs';
 
 export type State = {
     status: 'error' | 'success' | undefined;
@@ -128,6 +129,7 @@ export async function BuyProduct(formData: FormData){
             smallDescription: true,
             price: true,
             images: true,
+            productFile: true,
             User: {
                 select: {
                     connectedAccountId: true,
@@ -152,6 +154,10 @@ export async function BuyProduct(formData: FormData){
                 quantity: 1,
             },
         ],
+        metadata: {
+            link: data?.productFile as string
+        },
+
         payment_intent_data:{
             application_fee_amount: Math.round((data?.price as number * 100)) * 0.1,
             transfer_data: {
